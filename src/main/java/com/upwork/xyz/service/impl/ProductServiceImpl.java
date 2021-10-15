@@ -24,20 +24,20 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public Product CreateProduct(Product product) {
-		// TODO Auto-generated method stub
-		return null;
+		Product newProduct = productRpository.save(product);
+		return newProduct;
 	}
 
 	@Override
 	public Product updateProduct(Product product) {
-		// TODO Auto-generated method stub
-		return null;
+		Product updatedProduct = productRpository.save(product);
+		return updatedProduct;
 	}
 
 	@Override
-	public Set<Product> search(String name) {
-		// TODO Auto-generated method stub
-		return null;
+	public Set<Product> search(String productName) {
+       Set<Product> products=productRpository.search(productName);
+		return products;
 	}
 
 	@Override

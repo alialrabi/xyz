@@ -1,10 +1,13 @@
 package com.upwork.xyz.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -18,11 +21,14 @@ public class Store {
 
     @NotNull
     @Column(length = 50, unique = true, nullable = false)
-    private String name;
+    private String Storename;
     
     @NotNull
     @Column(length = 50, unique = true, nullable = false)
     private String address;
+    
+    @ManyToMany(mappedBy = "storeProducts")
+    Set<Product> products;
 
 	public Long getId() {
 		return id;
@@ -32,12 +38,12 @@ public class Store {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getStorename() {
+		return Storename;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setStorename(String storename) {
+		Storename = storename;
 	}
 
 	public String getAddress() {
@@ -47,5 +53,14 @@ public class Store {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-    
+
+	public Set<Product> getProducts() {
+		return products;
+	}
+
+	public void setProducts(Set<Product> products) {
+		this.products = products;
+	}
+
+	
 }

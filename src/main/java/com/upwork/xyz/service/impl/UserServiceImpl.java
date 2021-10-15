@@ -19,7 +19,7 @@ import com.upwork.xyz.service.dto.UserDTO;
 @Service
 public class UserServiceImpl implements UserService{
 	
-    private final Logger log = LoggerFactory.getLogger(UserService.class);
+    private final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
     private final UserRepository userRepository;
     
@@ -38,7 +38,6 @@ public class UserServiceImpl implements UserService{
         }
     
 	public User registerUser(UserDTO userDTO, String password) {
-		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 		System.out.println(userDTO);
         userRepository
             .findByEmail(userDTO.getUsername().toLowerCase())

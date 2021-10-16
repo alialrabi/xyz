@@ -7,12 +7,14 @@ spring:
       url: jdbc:mysql://localhost:3306/xyz
       username: root
       password: root
-      
+   liquibase:
+     change-log: classpath:config/changelog/master.xml
 
    jpa:
      hibernate:
-        ddl-auto: create
+        ddl-auto: none
         generate-ddl: true
+
         
 logging:
   level:

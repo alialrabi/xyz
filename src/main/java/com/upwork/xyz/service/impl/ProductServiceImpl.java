@@ -1,6 +1,7 @@
 package com.upwork.xyz.service.impl;
 
 
+import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -38,9 +39,18 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public Product updateProduct(Product product) {
-		Product updatedProduct = productRpository.save(product);
-		return updatedProduct;
+	public Optional<ProductDTO> updateProduct(ProductDTO productDTO) {
+		return productRpository
+	            .findById(productDTO.getId())
+	            .map(
+	                existingStore -> {
+	                    productMapper.partialUpdate(existingStore, productDTO);
+
+	                    return existingStore;
+	                }
+	            )
+	            .map(productRpository::save)
+	            .map(productMapper::toDto);
 	}
 
 	@Override

@@ -1,3 +1,3 @@
-id;username;email;enabled
-1;alialrabi;alialrabi@gmail.com;true;
-2;mazenali;mazenali@gmail.com;true;
+id;username;email;enabled;password_hash
+1;alialrabi;alialrabi@gmail.com;true;$2a$10$0.3FrLvRRL8uEWqqmEn6neWMr2JZyUV/16NM1A6lE6MebqVhMwPj.
+2;mazenali;mazenali@gmail.com;true;$2a$10$0.3FrLvRRL8uEWqqmEn6neWMr2JZyUV/16NM1A6lE6MebqVhMwPj.

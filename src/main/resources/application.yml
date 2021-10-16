@@ -6,16 +6,14 @@ spring:
       driver-class-name: com.mysql.cj.jdbc.Driver
       url: jdbc:mysql://localhost:3306/xyz
       username: root
-      password: password
-   liquibase:
-      change-log: classpath:config/changelog/master.xml
-
+      password: root
+      
 
    jpa:
      hibernate:
-        ddl-auto: none
+        ddl-auto: create
         generate-ddl: true
-
+        
 logging:
   level:
-    liquibase: INFO
+    liquibase: INFO        

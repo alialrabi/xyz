@@ -50,6 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.cors().and().csrf().disable().authorizeRequests()
             .antMatchers("/").hasAnyAuthority("USER", "CREATOR", "EDITOR", "ADMIN")
             .antMatchers(HttpMethod.POST, "/api/user").permitAll()
+            .antMatchers(HttpMethod.POST, "/api/product").permitAll()
             .antMatchers("/edit/**").hasAnyAuthority("ADMIN", "EDITOR")
             .antMatchers("/delete/**").hasAuthority("ADMIN")
             .anyRequest().authenticated()

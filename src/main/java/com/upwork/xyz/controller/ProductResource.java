@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.upwork.xyz.model.Product;
 import com.upwork.xyz.service.ProductService;
+import com.upwork.xyz.service.dto.ProductDTO;
 
 @RestController
 @RequestMapping("/api")
@@ -28,9 +29,9 @@ public class ProductResource {
 	}
 
 	@PostMapping("/product")
-	public ResponseEntity<Product> createUser(@Valid @RequestBody Product product) {
-	   Product newProduct= productService.CreateProduct(product);		  
-	   return new ResponseEntity<>(newProduct,HttpStatus.OK);
+	public ResponseEntity<ProductDTO> createUser(@Valid @RequestBody ProductDTO productDTO) {
+	   ProductDTO newProduct= productService.CreateProduct(productDTO);		  
+	   return new ResponseEntity<>(newProduct,HttpStatus.CREATED);
 	}
 	
 	@PutMapping("/product")

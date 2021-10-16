@@ -3,15 +3,16 @@ package com.upwork.xyz.service;
 import java.util.Set;
 
 import com.upwork.xyz.model.Product;
+import com.upwork.xyz.service.dto.ProductDTO;
 
 public interface ProductService {
 	
-	public Product CreateProduct(Product product);
+	 ProductDTO CreateProduct(ProductDTO productDTO);
 	
-	public Product updateProduct(Product product);
+	 Product updateProduct(Product product);
 	
-	public Set<Product> search(String name);
+	 Set<Product> search(String name);
 	
-	public void deleteProduct(long productId);
+	 void deleteProduct(long productId);
 	
 }

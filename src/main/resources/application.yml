@@ -13,4 +13,3 @@ spring:
      hibernate:
         ddl-auto: create
         generate-ddl: true
-        

@@ -21,23 +21,13 @@ import javax.validation.constraints.Size;
 public class Authority implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
     
     @NotNull
+    @Id
     @Size(max = 50)
     @Column(length = 50)
     private String name;
 
-    public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getName() {
         return name;

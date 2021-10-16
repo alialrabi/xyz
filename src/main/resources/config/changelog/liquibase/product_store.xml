@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+    <changeSet author="ali" id="00000000000003" context="test">
+        <createTable tableName="product">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="product_PK"/>
+            </column>
+            <column name="productName" type="varchar(50)"/>
+        </createTable>
+        <createTable tableName="store">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true" primaryKeyName="store_PK"/>
+            </column>
+            <column name="storeName" type="varchar(50)"/>
+            <column name="address" type="varchar(50)"/>
+        </createTable>
+        <createTable tableName="store_products">
+            <column name="product_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="store_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey columnNames="product_id, store_id" tableName="store_products"/>
+
+        <addForeignKeyConstraint baseColumnNames="product_id"
+                                 baseTableName="store_products"
+                                 constraintName="fk_product_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="product"/>
+
+        <addForeignKeyConstraint baseColumnNames="store_id"
+                                 baseTableName="store_products"
+                                 constraintName="fk_store_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="store"/>
+
+        <loadData
+                file="config/changelog/data/product.csv"
+                separator=";"
+                tableName="product">
+            <column name="id" type="numeric"/>
+            <column name="productName" type="string"/>
+        </loadData>
+
+        <loadData
+                file="config/changelog/data/store.csv"
+                separator=";"
+                tableName="store">
+            <column name="id" type="numeric"/>
+            <column name="storeName" type="string"/>
+            <column name="address" type="string"/>
+        </loadData>
+
+        <loadData
+                file="config/changelog/data/product_store.csv"
+                separator=";"
+                tableName="store_products">
+            <column name="product_id" type="numeric"/>
+            <column name="store_id" type="numeric"/>
+        </loadData>
+
+
+    </changeSet>
+</databaseChangeLog>

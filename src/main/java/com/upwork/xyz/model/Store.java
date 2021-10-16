@@ -21,7 +21,7 @@ public class Store {
 
     @NotNull
     @Column(length = 50, unique = true, nullable = false)
-    private String Storename;
+    private String storeName;
     
     @NotNull
     @Column(length = 50, unique = true, nullable = false)
@@ -36,14 +36,6 @@ public class Store {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public String getStorename() {
-		return Storename;
-	}
-
-	public void setStorename(String storename) {
-		Storename = storename;
 	}
 
 	public String getAddress() {
@@ -62,5 +54,11 @@ public class Store {
 		this.products = products;
 	}
 
-	
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
 }

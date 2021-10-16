@@ -1,5 +1,6 @@
 package com.upwork.xyz.controller;
 
+import java.util.Optional;
 import java.util.Set;
 
 import javax.validation.Valid;
@@ -13,9 +14,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.upwork.xyz.exception.EntityNotFoundException;
 import com.upwork.xyz.model.Product;
 import com.upwork.xyz.service.ProductService;
 import com.upwork.xyz.service.dto.ProductDTO;
+import com.upwork.xyz.utils.Constants;
 
 @RestController
 @RequestMapping("/api")
@@ -35,8 +39,13 @@ public class ProductResource {
 	}
 	
 	@PutMapping("/product")
-	public ResponseEntity<Product> updateUser(@Valid @RequestBody Product product) {
-	   Product updatedroduct= productService.updateProduct(product);		  
+	public ResponseEntity<Optional<ProductDTO>> updateUser(@Valid @RequestBody ProductDTO productDTO) {
+	  
+		if(productDTO == null) {
+			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
+		}
+		Optional<ProductDTO> updatedroduct= productService.updateProduct(productDTO);	
+	  
 	   return new ResponseEntity<>(updatedroduct,HttpStatus.OK);
 	}
 	 

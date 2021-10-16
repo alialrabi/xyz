@@ -1,5 +1,6 @@
 package com.upwork.xyz.service;
 
+import java.util.Optional;
 import java.util.Set;
 
 import com.upwork.xyz.model.Product;
@@ -9,7 +10,7 @@ public interface ProductService {
 	
 	 ProductDTO CreateProduct(ProductDTO productDTO);
 	
-	 Product updateProduct(Product product);
+	 Optional<ProductDTO> updateProduct(ProductDTO productDTO);
 	
 	 Set<Product> search(String name);
 	

@@ -8,6 +8,11 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.upwork.xyz.model.Product;
 
+/**
+ * 
+ * @author ali
+ *
+ */
 public interface ProductRpository extends JpaRepository<Product, Long>,  JpaSpecificationExecutor<Product> {
 	
 

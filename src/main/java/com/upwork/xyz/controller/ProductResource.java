@@ -26,6 +26,11 @@ import com.upwork.xyz.service.dto.ProductDTO;
 import com.upwork.xyz.service.impl.ProductServiceImpl;
 import com.upwork.xyz.utils.Constants;
 
+/**
+ * 
+ * @author ali
+ *
+ */
 @RestController
 @RequestMapping("/api")
 public class ProductResource {
@@ -49,26 +54,24 @@ public class ProductResource {
 	@PutMapping("/product")
 	public ResponseEntity<Optional<ProductDTO>> updateUser(@Valid @RequestBody ProductDTO productDTO) {
 		log.debug("Rest service to edit product" + productDTO);
-		if(productDTO == null) {
-			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
-		}
-		Optional<ProductDTO> updatedroduct= productService.updateProduct(productDTO);	
-	  
-	   return new ResponseEntity<>(updatedroduct,HttpStatus.OK);
+		Optional<ProductDTO> updatedProduct= productService.updateProduct(productDTO);	
+	    return new ResponseEntity<>(updatedProduct,HttpStatus.CREATED);
 	}
 	 
 	
 	@GetMapping(value = "/search")
 	public ResponseEntity<Set<Product>> searchProduct() {
+       log.debug("Rest service to search product");	
 	   Set<Product> products=productService.search();
 	   return  new ResponseEntity<Set<Product>>(products,HttpStatus.OK);
 	}
 	 
 	 
 	@DeleteMapping(value = "/product/{id}")
-	public void deleteUser(@PathVariable("id") long productId) {
+	public ResponseEntity<Void> deleteUser(@PathVariable("id") long productId) {
 	   log.debug("Rest service to delete product" + productId);	
        productService.deleteProduct(productId);
+       return new ResponseEntity<>(HttpStatus.OK);
     }
 	
 }

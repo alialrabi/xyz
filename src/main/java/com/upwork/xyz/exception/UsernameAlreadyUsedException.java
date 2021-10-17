@@ -3,10 +3,10 @@ package com.upwork.xyz.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code=HttpStatus.NOT_FOUND)
-public class EntityNotFoundException extends RuntimeException{
+@ResponseStatus(code=HttpStatus.BAD_REQUEST)
+public class UsernameAlreadyUsedException extends RuntimeException{
 
-	   public EntityNotFoundException(String message) {
+	   public UsernameAlreadyUsedException(String message) {
 	        super(message);
 	    }
 }

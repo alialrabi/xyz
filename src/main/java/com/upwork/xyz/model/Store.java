@@ -15,9 +15,14 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+/**
+ * 
+ * @author ali
+ *
+ */
 @Entity
 @Table(name="store")
-public class Store {
+public class Store extends Meetadata{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

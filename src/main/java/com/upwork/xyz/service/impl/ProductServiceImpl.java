@@ -1,17 +1,14 @@
 package com.upwork.xyz.service.impl;
 
-
-import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import com.upwork.xyz.exception.EntityNotFoundException;
 import com.upwork.xyz.model.Product;
 import com.upwork.xyz.model.User;
 import com.upwork.xyz.repository.ProductRpository;
@@ -19,7 +16,13 @@ import com.upwork.xyz.service.ProductService;
 import com.upwork.xyz.service.UserService;
 import com.upwork.xyz.service.dto.ProductDTO;
 import com.upwork.xyz.service.mapper.ProductMapper;
+import com.upwork.xyz.utils.Constants;
 
+/**
+ * 
+ * @author ali
+ *
+ */
 @Service
 @Transactional
 public class ProductServiceImpl implements ProductService{
@@ -48,17 +51,22 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public Optional<ProductDTO> updateProduct(ProductDTO productDTO) {
-		return productRpository
+		Optional<ProductDTO>  updatedProduct =  productRpository
 	            .findById(productDTO.getId())
 	            .map(
 	                existingStore -> {
-	                    productMapper.partialUpdate(existingStore, productDTO);
+	                    productMapper.update(existingStore, productDTO);
 
 	                    return existingStore;
 	                }
 	            )
 	            .map(productRpository::save)
 	            .map(productMapper::toDto);
+		System.out.println(updatedProduct);
+		if(updatedProduct.isEmpty()) {
+			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
+		}
+		return updatedProduct;
 	}
 
 	@Override
@@ -80,6 +88,8 @@ public class ProductServiceImpl implements ProductService{
 		log.debug("Service to delee product " + productId);
 		if(productRpository.existsById(productId)) {
 		    productRpository.deleteById(productId);
+		}else {
+			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
 		}
 	}
 

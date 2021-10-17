@@ -1,10 +1,10 @@
 package com.upwork.xyz.service.impl;
 
 
-import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
 
+import com.upwork.xyz.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.upwork.xyz.model.Product;
 import com.upwork.xyz.model.User;
-import com.upwork.xyz.repository.ProductRpository;
+import com.upwork.xyz.repository.ProductRepository;
 import com.upwork.xyz.service.ProductService;
 import com.upwork.xyz.service.UserService;
 import com.upwork.xyz.service.dto.ProductDTO;
@@ -26,13 +26,13 @@ public class ProductServiceImpl implements ProductService{
 	
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
     
-    private final ProductRpository productRpository;
+    private final ProductRepository productRpository;
     
     private final UserService userService;
     
     private final ProductMapper productMapper;
 
-	public ProductServiceImpl(ProductRpository productRpository,ProductMapper productMapper,UserService userService) {
+	public ProductServiceImpl(ProductRepository productRpository, ProductMapper productMapper, UserService userService) {
 		this.productRpository = productRpository;
 		this.productMapper = productMapper;
 		this.userService = userService;
@@ -63,16 +63,8 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public Set<Product> search() {
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		if (principal instanceof UserDetails) {
-		   String username = ((UserDetails)principal).getUsername();
-		   User user=userService.getUser(username);
-	       Set<Product> products=productRpository.search(user.getStore().getId());
-		   return products;
-		} 
-		
-		return null;
+		Set<Product> products=productRpository.search();
+		return products;
 	}
 
 	@Override

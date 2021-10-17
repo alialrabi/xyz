@@ -1,3 +1,3 @@
 id;username;email;enabled;password_hash;store_id
-1;admin;alialrabi@gmail.com;true;$2a$10$0.3FrLvRRL8uEWqqmEn6neWMr2JZyUV/16NM1A6lE6MebqVhMwPj.;1
-2;employee;mazenali@gmail.com;true;$2a$10$0.3FrLvRRL8uEWqqmEn6neWMr2JZyUV/16NM1A6lE6MebqVhMwPj.;1
+1;admin;admin@gmail.com;true;$2a$10$HEX9i/o5WhM6dbBbyCftZuHk2foVxoCBn5SySDrd49rS7MdT/E49O;1
+2;employee;employee@gmail.com;true;$2a$10$vdhkXa0Ovz8zKqNJ.rKrMOQILLr9pzFbmByO.6NriorP.GfykmCb.;1

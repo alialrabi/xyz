@@ -1,9 +1,11 @@
 package com.upwork.xyz.service.impl;
 
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import com.upwork.xyz.model.Store;
 import com.upwork.xyz.security.AuthoritiesConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,6 +44,18 @@ public class ProductServiceImpl implements ProductService{
 	public ProductDTO CreateProduct(ProductDTO productDTO) {
 		log.debug("Request to save Product : {}", productDTO);
 		Product product=productMapper.toEntity(productDTO);
+
+		Store store = new Store();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+			String username = ((UserDetails)principal).getUsername();
+			User user=userService.getUser(username);
+			store = user.getStore();
+		}
+		Set<Store> stores = new HashSet<>();
+		stores.add(store);
+		product.setStoreProducts(stores);
 		product = productRpository.save(product);
 		return productMapper.toDto(product);
 	}

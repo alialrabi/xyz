@@ -11,13 +11,13 @@
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="product_PK"/>
             </column>
-            <column name="productName" type="varchar(50)"/>
+            <column name="product_name" type="varchar(50)"/>
         </createTable>
         <createTable tableName="store">
             <column autoIncrement="true" name="id" type="BIGINT">
                 <constraints primaryKey="true" primaryKeyName="store_PK"/>
             </column>
-            <column name="storeName" type="varchar(50)"/>
+            <column name="store_name" type="varchar(50)"/>
             <column name="address" type="varchar(50)"/>
         </createTable>
         <createTable tableName="store_products">
@@ -48,7 +48,7 @@
                 separator=";"
                 tableName="product">
             <column name="id" type="numeric"/>
-            <column name="productName" type="string"/>
+            <column name="product_name" type="string"/>
         </loadData>
 
         <loadData
@@ -56,7 +56,7 @@
                 separator=";"
                 tableName="store">
             <column name="id" type="numeric"/>
-            <column name="storeName" type="string"/>
+            <column name="store_name" type="string"/>
             <column name="address" type="string"/>
         </loadData>
 

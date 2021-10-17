@@ -1,17 +1,22 @@
 package com.upwork.xyz.service.impl;
 
 
+import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.upwork.xyz.model.Product;
+import com.upwork.xyz.model.User;
 import com.upwork.xyz.repository.ProductRpository;
 import com.upwork.xyz.service.ProductService;
+import com.upwork.xyz.service.UserService;
 import com.upwork.xyz.service.dto.ProductDTO;
 import com.upwork.xyz.service.mapper.ProductMapper;
 
@@ -23,11 +28,14 @@ public class ProductServiceImpl implements ProductService{
     
     private final ProductRpository productRpository;
     
+    private final UserService userService;
+    
     private final ProductMapper productMapper;
 
-	public ProductServiceImpl(ProductRpository productRpository,ProductMapper productMapper) {
+	public ProductServiceImpl(ProductRpository productRpository,ProductMapper productMapper,UserService userService) {
 		this.productRpository = productRpository;
 		this.productMapper = productMapper;
+		this.userService = userService;
 	}
 
 	@Override
@@ -54,15 +62,25 @@ public class ProductServiceImpl implements ProductService{
 	}
 
 	@Override
-	public Set<Product> search(String productName) {
-       Set<Product> products=productRpository.search(productName);
-		return products;
+	public Set<Product> search() {
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		if (principal instanceof UserDetails) {
+		   String username = ((UserDetails)principal).getUsername();
+		   User user=userService.getUser(username);
+	       Set<Product> products=productRpository.search(user.getStore().getId());
+		   return products;
+		} 
+		
+		return null;
 	}
 
 	@Override
 	public void deleteProduct(long productId) {
-		productRpository.deleteById(productId);
-		
+		log.debug("Service to delee product " + productId);
+		if(productRpository.existsById(productId)) {
+		    productRpository.deleteById(productId);
+		}
 	}
 
 }

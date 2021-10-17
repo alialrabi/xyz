@@ -3,6 +3,7 @@ package com.upwork.xyz.model;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,6 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name="product")
@@ -25,7 +28,8 @@ public class Product {
     @Column(length = 50, unique = true, nullable = false)
     private String productName;
 	
-	@ManyToMany
+    @JsonIgnore
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 	  name = "store_products", 
 	  joinColumns = @JoinColumn(name = "product_id"), 

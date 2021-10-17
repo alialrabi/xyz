@@ -45,15 +45,21 @@ public class User  implements Serializable {
     @NotNull
     private boolean enabled;
 
-
-    @ManyToMany
+    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "user_authority",
         joinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") },
         inverseJoinColumns = { @JoinColumn(name = "authority_name", referencedColumnName = "name") }
     )
+    
+    
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="store_id", nullable=false)
+    private Store store;
 
     public Long getId() {
         return id;
@@ -101,6 +107,14 @@ public class User  implements Serializable {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
+	}
+
+	public Store getStore() {
+		return store;
+	}
+
+	public void setStore(Store store) {
+		this.store = store;
 	}
 
 	@Override

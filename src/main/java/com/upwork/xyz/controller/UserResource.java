@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.upwork.xyz.model.User;
 import com.upwork.xyz.service.UserService;
 import com.upwork.xyz.service.dto.RegisterdUser;
+import com.upwork.xyz.service.dto.UserDTO;
 
 
 @RestController
@@ -27,8 +28,10 @@ public class UserResource {
 	    }
 	
 	 @PostMapping("/user")
-	 public ResponseEntity<User> createUser(@Valid @RequestBody RegisterdUser registerdUser) {
-		  User user= userService.registerUser(registerdUser, "");		  
+	 public ResponseEntity<User> createUser(@Valid @RequestBody UserDTO userDTO) {
+		 System.out.println(userDTO);
+		 
+		  User user= userService.registerUser(userDTO);		  
 	      return new ResponseEntity<>(user,HttpStatus.OK);
 	 }
 	 

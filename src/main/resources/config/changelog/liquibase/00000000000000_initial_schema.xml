@@ -21,6 +21,9 @@
             <column name="enabled" type="boolean" valueBoolean="false">
                 <constraints nullable="false" />
             </column>
+            <column name="store_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
 
         </createTable>
 

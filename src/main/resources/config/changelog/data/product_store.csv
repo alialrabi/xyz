@@ -1,4 +1,5 @@
-product_id;store_id
+store_id;product_id
 1;1
 1;2
 2;1
+2;2

@@ -12,7 +12,7 @@ public interface ProductService {
 	
 	 Optional<ProductDTO> updateProduct(ProductDTO productDTO);
 	
-	 Set<Product> search(String name);
+	 Set<Product> search();
 	
 	 void deleteProduct(long productId);
 	

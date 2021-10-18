@@ -93,7 +93,7 @@ public class UserResourceTest {
                 .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDTO)))
                 .andExpect(status().isOk());
 
-        // Validate the Match in the database
+        // Validate the User in the database
         List<User> userList = userRepository.findAll();
         assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
         User testUser = userList.get(userList.size() - 1);
@@ -102,6 +102,36 @@ public class UserResourceTest {
         assertThat(testUser.isEnabled()).isEqualTo(DEFAULT_ENABLED);
         assertThat(testUser.getStore().getId()).isEqualTo(store.getId());
     }
+//
+//    @Test
+//    @Transactional
+//    void createUserWithExistingEmail() throws Exception {
+//
+//        Store store = new Store();
+//        store.setStoreName("store name");
+//        store.setAddress("store address");
+//        store.setUsers(new HashSet<>());
+//        store.setProducts(new HashSet<>());
+//        em.persist(store);
+//        em.flush();
+//
+//        userDTO.setStore_id(store.getId());
+//
+//        int databaseSizeBeforeCreate = userRepository.findAll().size();
+//        // Create the User
+//        restUserMockMvc
+//                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDTO)))
+//                .andExpect(status().isOk());
+//
+//        // Validate the User in the database
+//        List<User> userList = userRepository.findAll();
+//        assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
+//        User testUser = userList.get(userList.size() - 1);
+//        assertThat(testUser.getUsername()).isEqualTo(DEFAULT_USERNAME);
+//        assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
+//        assertThat(testUser.isEnabled()).isEqualTo(DEFAULT_ENABLED);
+//        assertThat(testUser.getStore().getId()).isEqualTo(store.getId());
+//    }
 
     @Test
     void testGetUser()  throws Exception{

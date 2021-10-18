@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.upwork.xyz.exception.UsernameAlreadyUsedException;
 import com.upwork.xyz.model.Authority;
 import com.upwork.xyz.model.Store;
 import com.upwork.xyz.model.User;
@@ -18,6 +19,7 @@ import com.upwork.xyz.repository.UserRepository;
 import com.upwork.xyz.security.AuthoritiesConstants;
 import com.upwork.xyz.service.UserService;
 import com.upwork.xyz.service.dto.UserDTO;
+import com.upwork.xyz.utils.Constants;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -45,17 +47,16 @@ public class UserServiceImpl implements UserService{
         }
     
 	public User registerUser(UserDTO userDTO) {
-        userRepository
-            .findByEmail(userDTO.getUsername().toLowerCase())
-            .ifPresent(
-                existingUser -> {
-                    boolean removed = checkUser(existingUser);
-                    if (!removed) {
-                      //  throw new UsernameAlreadyUsedException();
-                    }
-                }
-            );
-
+	    userRepository
+	            .findByUsername(userDTO.getUsername().toLowerCase())
+	            .ifPresent(
+	                existingUser -> {
+	                    boolean removed = checkUser(existingUser);
+	                    if (!removed) {
+	                        throw new UsernameAlreadyUsedException(Constants._USER_ALREADY_EXISTS);
+	                    }
+	                }
+	            );
         User newUser = new User();
         newUser.setUsername(userDTO.getUsername());
         newUser.setEmail(userDTO.getEmail());
@@ -73,7 +74,7 @@ public class UserServiceImpl implements UserService{
     }
 	
     private boolean checkUser(User existingUser) {
-        if (existingUser.equals(null)) {
+        if (!existingUser.equals(null)) {
             return false;
         }
         return true;

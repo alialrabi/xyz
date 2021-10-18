@@ -13,13 +13,16 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.upwork.xyz.exception.EntityNotFoundException;
 import com.upwork.xyz.model.Product;
 import com.upwork.xyz.model.User;
 import com.upwork.xyz.repository.ProductRepository;
+import com.upwork.xyz.repository.StoreRpository;
 import com.upwork.xyz.service.ProductService;
 import com.upwork.xyz.service.UserService;
 import com.upwork.xyz.service.dto.ProductDTO;
 import com.upwork.xyz.service.mapper.ProductMapper;
+import com.upwork.xyz.utils.Constants;
 
 @Service
 @Transactional
@@ -29,51 +32,54 @@ public class ProductServiceImpl implements ProductService{
     
     private final ProductRepository productRepository;
     
+    private final StoreRpository storeRpository;
+    
     private final UserService userService;
     
     private final ProductMapper productMapper;
 
-	public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, UserService userService) {
+	public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper,
+			UserService userService,StoreRpository storeRpository) {
 		this.productRepository = productRepository;
 		this.productMapper = productMapper;
 		this.userService = userService;
+		this.storeRpository = storeRpository;
 	}
 
 	@Override
 	public ProductDTO CreateProduct(ProductDTO productDTO) {
 		log.debug("Request to save Product : {}", productDTO);
 		Product product=productMapper.toEntity(productDTO);
-
-		Store store = new Store();
-		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-		System.out.println(principal + "  principal ------------------------------>");
-
-		if (principal instanceof UserDetails) {
-			String username = ((UserDetails)principal).getUsername();
-			User user=userService.getUser(username);
-			store = user.getStore();
+		Optional<Store> store = storeRpository.findById(productDTO.getStoreId());
+		if(store.isPresent()) {
+		    Set<Store> stores = new HashSet<>();
+		    stores.add(store.get());
+		    product.setStoreProducts(stores);
+		    product = productRepository.save(product);
+		}else {
+			throw new EntityNotFoundException(Constants._STORE_NOT_EXISTS);
 		}
-		Set<Store> stores = new HashSet<>();
-		stores.add(store);
-		product.setStoreProducts(stores);
-		product = productRepository.save(product);
 		return productMapper.toDto(product);
 	}
 
 	@Override
 	public Optional<ProductDTO> updateProduct(ProductDTO productDTO) {
-		return productRepository
+		Optional<ProductDTO>  updatedProduct =  productRepository
 	            .findById(productDTO.getId())
 	            .map(
 	                existingStore -> {
-	                    productMapper.partialUpdate(existingStore, productDTO);
+	                    productMapper.update(existingStore, productDTO);
 
 	                    return existingStore;
 	                }
 	            )
 	            .map(productRepository::save)
 	            .map(productMapper::toDto);
+		System.out.println(updatedProduct);
+		if(updatedProduct.isEmpty()) {
+			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
+		}
+		return updatedProduct;
 	}
 
 	@Override

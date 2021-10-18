@@ -7,6 +7,8 @@ public class ProductDTO implements Serializable{
 	private long id;
 	
 	private String productName;
+	
+	private long storeId;
 
 	public long getId() {
 		return id;
@@ -22,6 +24,14 @@ public class ProductDTO implements Serializable{
 
 	public void setProductName(String productName) {
 		this.productName = productName;
+	}
+
+	public long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(long storeId) {
+		this.storeId = storeId;
 	}
 
 	@Override

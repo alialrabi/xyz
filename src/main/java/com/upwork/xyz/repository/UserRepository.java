@@ -9,9 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 import com.upwork.xyz.model.User;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
-   public Optional<User> findByEmail(String email);
-
+   
    @EntityGraph(attributePaths = "authorities")
    public User getUserByUsername(String username);
+   
+   public Optional<User> findByUsername(String username);
 }

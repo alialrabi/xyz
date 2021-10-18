@@ -2,9 +2,7 @@ package com.upwork.xyz.controller;
 
 import java.util.Optional;
 import java.util.Set;
-
 import javax.validation.Valid;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -16,9 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.upwork.xyz.exception.EntityNotFoundException;
 import com.upwork.xyz.model.Product;
 import com.upwork.xyz.service.ProductService;
@@ -35,7 +31,6 @@ public class ProductResource {
 	 private final ProductService productService;
 	 
 	 public ProductResource(ProductService productService) {
-		super();
 		this.productService = productService;
 	}
 
@@ -54,21 +49,23 @@ public class ProductResource {
 		}
 		Optional<ProductDTO> updatedroduct= productService.updateProduct(productDTO);	
 	  
-	   return new ResponseEntity<>(updatedroduct,HttpStatus.OK);
+	   return new ResponseEntity<>(updatedroduct,HttpStatus.CREATED);
 	}
 	 
 	
 	@GetMapping(value = "/search")
 	public ResponseEntity<Set<Product>> searchProduct() {
+	   log.debug("Rest service to search for products");
 	   Set<Product> products=productService.search();
 	   return  new ResponseEntity<Set<Product>>(products,HttpStatus.OK);
 	}
 	 
 	 
 	@DeleteMapping(value = "/product/{id}")
-	public void deleteUser(@PathVariable("id") long productId) {
+	public ResponseEntity<Void> deleteUser(@PathVariable("id") long productId) {
 	   log.debug("Rest service to delete product" + productId);	
        productService.deleteProduct(productId);
+       return new  ResponseEntity<>(HttpStatus.OK);
     }
 	
 }

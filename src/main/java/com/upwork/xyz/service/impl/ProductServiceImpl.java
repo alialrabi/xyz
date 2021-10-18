@@ -64,6 +64,7 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public Optional<ProductDTO> updateProduct(ProductDTO productDTO) {
+		log.debug("Service to update product " + productDTO);
 		Optional<ProductDTO>  updatedProduct =  productRepository
 	            .findById(productDTO.getId())
 	            .map(
@@ -90,7 +91,7 @@ public class ProductServiceImpl implements ProductService{
 
 	@Override
 	public void deleteProduct(long productId) {
-		log.debug("Service to delee product " + productId);
+		log.debug("Service to delete product " + productId);
 		if(productRepository.existsById(productId)) {
 		    productRepository.deleteById(productId);
 		}

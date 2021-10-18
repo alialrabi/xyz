@@ -102,36 +102,36 @@ public class UserResourceTest {
         assertThat(testUser.isEnabled()).isEqualTo(DEFAULT_ENABLED);
         assertThat(testUser.getStore().getId()).isEqualTo(store.getId());
     }
-//
-//    @Test
-//    @Transactional
-//    void createUserWithExistingEmail() throws Exception {
-//
-//        Store store = new Store();
-//        store.setStoreName("store name");
-//        store.setAddress("store address");
-//        store.setUsers(new HashSet<>());
-//        store.setProducts(new HashSet<>());
-//        em.persist(store);
-//        em.flush();
-//
-//        userDTO.setStore_id(store.getId());
-//
-//        int databaseSizeBeforeCreate = userRepository.findAll().size();
-//        // Create the User
-//        restUserMockMvc
-//                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDTO)))
-//                .andExpect(status().isOk());
-//
-//        // Validate the User in the database
-//        List<User> userList = userRepository.findAll();
-//        assertThat(userList).hasSize(databaseSizeBeforeCreate + 1);
-//        User testUser = userList.get(userList.size() - 1);
-//        assertThat(testUser.getUsername()).isEqualTo(DEFAULT_USERNAME);
-//        assertThat(testUser.getEmail()).isEqualTo(DEFAULT_EMAIL);
-//        assertThat(testUser.isEnabled()).isEqualTo(DEFAULT_ENABLED);
-//        assertThat(testUser.getStore().getId()).isEqualTo(store.getId());
-//    }
+
+    @Test
+    @Transactional
+    void createUserWithExistingEmail() throws Exception {
+
+        Store store = new Store();
+        store.setStoreName("store name");
+        store.setAddress("store address");
+        store.setUsers(new HashSet<>());
+        store.setProducts(new HashSet<>());
+        em.persist(store);
+        em.flush();
+
+        userDTO.setStore_id(store.getId());
+
+        User user1 = new User();
+        user1.setEmail(DEFAULT_EMAIL);
+        user1.setUsername(DEFAULT_USERNAME);
+        user1.setEnabled(DEFAULT_ENABLED);
+        user1.setPassword("password10password10password10password10password10password10");
+        user1.setStore(store);
+        em.persist(user1);
+        em.flush();
+
+        // Create the User
+        restUserMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(userDTO)))
+                .andExpect(status().isBadRequest());
+
+    }
 
     @Test
     void testGetUser()  throws Exception{

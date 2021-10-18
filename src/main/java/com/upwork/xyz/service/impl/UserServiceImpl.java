@@ -74,10 +74,8 @@ public class UserServiceImpl implements UserService{
     }
 	
     private boolean checkUser(User existingUser) {
-        if (!existingUser.equals(null)) {
-            return false;
-        }
-        return true;
+
+        return existingUser.equals(null);
     }
 
 	@Override

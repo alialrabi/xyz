@@ -8,6 +8,7 @@ import com.upwork.xyz.repository.ProductRepository;
 import com.upwork.xyz.repository.StoreRpository;
 import com.upwork.xyz.repository.UserRepository;
 import com.upwork.xyz.security.AuthoritiesConstants;
+import com.upwork.xyz.service.dto.ProductDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -65,8 +66,15 @@ public class ProductResourceTest {
     @Autowired
     private EntityManager em;
 
+    ProductDTO productDto = new ProductDTO();
     Product product = new Product();
 
+    public static ProductDTO createEntityDto(EntityManager em) {
+        ProductDTO product = new ProductDTO();
+        product.setProductName(DEFAULT_Product_Name);
+
+        return product;
+    }
     public static Product createEntity(EntityManager em) {
         Product product = new Product();
         product.setProductName(DEFAULT_Product_Name);
@@ -77,6 +85,7 @@ public class ProductResourceTest {
     @BeforeEach
     public void initTest() {
         product = createEntity(em);
+        productDto = createEntityDto(em);
     }
 
     @Test
@@ -91,26 +100,13 @@ public class ProductResourceTest {
         em.persist(store);
         em.flush();
 
-        User user = new User();
-        user.setUsername(USER_NAME);
-        user.setEmail("test@test.com");
-        user.setPassword("password10password10password10password10password10password10");
-        user.setEnabled(true);
-        Authority authority = new Authority();
-        authority.setName(AuthoritiesConstants.EMPLOYEE);
-        Set<Authority> authorities = new HashSet<>();
-        authorities.add(authority);
-        user.setAuthorities(authorities);
-        System.out.println(user);
-        user.setStore(store);
-        em.persist(user);
-        em.flush();
+       productDto.setStoreId(store.getId());
 
 
         int databaseSizeBeforeCreate = productRepository.findAll().size();
         // Create the Product
         restProductMockMvc
-                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(product)))
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productDto)))
                 .andExpect(status().isCreated());
 
         // Validate the Match in the database
@@ -119,6 +115,21 @@ public class ProductResourceTest {
         Product testProduct = productList.get(productList.size() - 1);
         assertThat(testProduct.getProductName()).isEqualTo(DEFAULT_Product_Name);
         assertThat(testProduct.getStoreProducts().stream().collect(Collectors.toList()).get(0).getId()).isEqualTo(store.getId());
+
+    }
+
+    @Test
+    @Transactional
+    void createProductWithNotFoundStore() throws Exception {
+
+        productDto.setStoreId(10000l);
+
+
+        int databaseSizeBeforeCreate = productRepository.findAll().size();
+        // Create the Product
+        restProductMockMvc
+                .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(productDto)))
+                .andExpect(status().isNotFound());
 
     }
 
@@ -170,6 +181,25 @@ public class ProductResourceTest {
 
         updatedProduct.setProductName(UPDATED_Product_Name);
         updatedProduct.setId(0l);
+
+        restProductMockMvc
+                .perform(
+                        put(ENTITY_API_URL)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(TestUtil.convertObjectToJsonBytes(updatedProduct))
+                )
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @Transactional
+    void updateProductNotExit() throws Exception {
+
+        // Update the product
+        ProductDTO updatedProduct = new ProductDTO();
+        updatedProduct.setProductName(UPDATED_Product_Name);
+        updatedProduct.setId(10000l);
 
         restProductMockMvc
                 .perform(
@@ -295,7 +325,7 @@ public class ProductResourceTest {
 
     @Test
     @Transactional
-    void deleteExpense() throws Exception {
+    void deleteProduct() throws Exception {
         // Initialize the database
         productRepository.saveAndFlush(product);
 
@@ -304,7 +334,7 @@ public class ProductResourceTest {
         // Delete the product
         restProductMockMvc
                 .perform(delete(ENTITY_API_URL_ID, product.getId()).accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+                .andExpect(status().isOk());
 
         // Validate the database contains one less item
         List<Product> expenseList = productRepository.findAll();

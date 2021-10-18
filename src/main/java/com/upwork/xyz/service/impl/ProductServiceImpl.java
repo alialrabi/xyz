@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService{
 	            .map(productRepository::save)
 	            .map(productMapper::toDto);
 		System.out.println(updatedProduct);
-		if(updatedProduct.isEmpty()) {
+		if(!updatedProduct.isPresent()) {
 			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
 		}
 		return updatedProduct;

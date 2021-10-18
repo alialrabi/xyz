@@ -9,6 +9,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.BatchSize;
 
 /**
@@ -56,7 +58,8 @@ public class User  implements Serializable {
     
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
-    
+
+    @JsonIgnoreProperties(value = {"hibernateLazyInitializer"})
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="store_id", nullable=false)
     private Store store;

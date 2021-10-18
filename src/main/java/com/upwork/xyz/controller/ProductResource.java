@@ -49,7 +49,7 @@ public class ProductResource {
 	@PutMapping("/product")
 	public ResponseEntity<Optional<ProductDTO>> updateUser(@Valid @RequestBody ProductDTO productDTO) {
 		log.debug("Rest service to edit product" + productDTO);
-		if(productDTO == null) {
+		if(productDTO.getId() == 0) {
 			throw new EntityNotFoundException(Constants._PRODUCT_NOT_EXISTS);
 		}
 		Optional<ProductDTO> updatedroduct= productService.updateProduct(productDTO);	

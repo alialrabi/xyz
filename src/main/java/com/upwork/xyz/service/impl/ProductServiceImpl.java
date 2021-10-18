@@ -1,10 +1,11 @@
 package com.upwork.xyz.service.impl;
 
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import com.upwork.xyz.security.AuthoritiesConstants;
+import com.upwork.xyz.model.Store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,14 +27,14 @@ public class ProductServiceImpl implements ProductService{
 	
     private final Logger log = LoggerFactory.getLogger(ProductServiceImpl.class);
     
-    private final ProductRepository productRpository;
+    private final ProductRepository productRepository;
     
     private final UserService userService;
     
     private final ProductMapper productMapper;
 
-	public ProductServiceImpl(ProductRepository productRpository, ProductMapper productMapper, UserService userService) {
-		this.productRpository = productRpository;
+	public ProductServiceImpl(ProductRepository productRepository, ProductMapper productMapper, UserService userService) {
+		this.productRepository = productRepository;
 		this.productMapper = productMapper;
 		this.userService = userService;
 	}
@@ -42,13 +43,27 @@ public class ProductServiceImpl implements ProductService{
 	public ProductDTO CreateProduct(ProductDTO productDTO) {
 		log.debug("Request to save Product : {}", productDTO);
 		Product product=productMapper.toEntity(productDTO);
-		product = productRpository.save(product);
+
+		Store store = new Store();
+		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+		System.out.println(principal + "  principal ------------------------------>");
+
+		if (principal instanceof UserDetails) {
+			String username = ((UserDetails)principal).getUsername();
+			User user=userService.getUser(username);
+			store = user.getStore();
+		}
+		Set<Store> stores = new HashSet<>();
+		stores.add(store);
+		product.setStoreProducts(stores);
+		product = productRepository.save(product);
 		return productMapper.toDto(product);
 	}
 
 	@Override
 	public Optional<ProductDTO> updateProduct(ProductDTO productDTO) {
-		return productRpository
+		return productRepository
 	            .findById(productDTO.getId())
 	            .map(
 	                existingStore -> {
@@ -57,21 +72,21 @@ public class ProductServiceImpl implements ProductService{
 	                    return existingStore;
 	                }
 	            )
-	            .map(productRpository::save)
+	            .map(productRepository::save)
 	            .map(productMapper::toDto);
 	}
 
 	@Override
 	public Set<Product> search() {
-		Set<Product> products=productRpository.search();
+		Set<Product> products= productRepository.search();
 		return products;
 	}
 
 	@Override
 	public void deleteProduct(long productId) {
 		log.debug("Service to delee product " + productId);
-		if(productRpository.existsById(productId)) {
-		    productRpository.deleteById(productId);
+		if(productRepository.existsById(productId)) {
+		    productRepository.deleteById(productId);
 		}
 	}
 
